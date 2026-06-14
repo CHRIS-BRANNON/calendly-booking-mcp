@@ -1,6 +1,6 @@
 {
   "name": "calendly-booking-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server for listing and booking Calendly appointments via Google OAuth and Playwright",
   "author": "Chris Brannon <ChrisBr@nnon.tech>",
   "license": "MIT",
