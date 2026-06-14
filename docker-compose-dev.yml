@@ -1,0 +1,9 @@
+name: calendly-booking-mcp
+
+services:
+  app:
+    container_name: server
+    build: .
+    env_file: .env
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"

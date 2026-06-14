@@ -1,0 +1,12 @@
+node_modules/
+docker-compose.yml
+docker-compose-dev.yml
+.env
+.env.*
+.git/
+*.png
+.vscode/
+README.md
+CLAUDE.md
+.prettierrc
+.prettierignore

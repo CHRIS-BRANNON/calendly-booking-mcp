@@ -1,0 +1,12 @@
+{
+  "[lockfile]": {
+    "editor.formatOnSave": false
+  },
+  "prettier.ignorePath": ".prettierignore",
+  "files.associations": {
+    "bun.lock": "yaml"
+  },
+  "[yaml]": {
+    "editor.formatOnSave": false
+  }
+}

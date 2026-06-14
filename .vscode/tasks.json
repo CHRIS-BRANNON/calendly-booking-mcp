@@ -1,0 +1,45 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Docker Image Build",
+      "type": "shell",
+      "command": "docker compose -f docker-compose-dev.yml down ; docker system prune --all --force && docker compose -f docker-compose-dev.yml up --build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker Stop",
+      "type": "shell",
+      "command": "docker compose -f docker-compose-dev.yml down",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Docker Logs",
+      "type": "shell",
+      "command": "docker compose -f docker-compose-dev.yml logs -f",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker Status",
+      "type": "shell",
+      "command": "docker compose -f docker-compose-dev.yml ps",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    }
+  ]
+}
