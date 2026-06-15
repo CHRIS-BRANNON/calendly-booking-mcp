@@ -1,0 +1,18 @@
+---
+services:
+  calendly-booking-mcp:
+    container_name: calendly-booking-mcp
+    image: ghcr.io/chris-brannon/calendly-booking-mcp:latest
+    restart: unless-stopped
+    environment:
+      - CALENDLY_URL=https://calendly.com/your-username/your-event-type
+      - PORT=3000
+      - SERVER_URL=https://your-server-url.com
+      - GOOGLE_CLIENT_ID=your-google-client-id
+      - GOOGLE_CLIENT_SECRET=your-google-client-secret
+      - JWT_SECRET=your-jwt-secret
+      - BOOKING_DESCRIPTION=Books appointments on a public Calendly page.
+      - HEADLESS=true
+      - DEBUG=false
+    ports:
+      - 3000:3000
