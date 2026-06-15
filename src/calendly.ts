@@ -1,5 +1,8 @@
-import { chromium } from "playwright";
+import { chromium } from "playwright-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import type { Page } from "playwright";
+
+chromium.use(StealthPlugin());
 
 export type Slot = { date: string; time?: string };
 export type BookResult = { message: string };
@@ -36,9 +39,6 @@ async function launchPage() {
   });
 
   const page = await context.newPage();
-  await page.addInitScript(() => {
-    Object.defineProperty(navigator, "webdriver", { get: () => undefined });
-  });
   return { browser, page };
 }
 
@@ -186,11 +186,28 @@ export async function bookAppointment(
 
     if (phone) await page.getByLabel(/phone/i).first().fill(phone);
 
-    // TODO: Phase 2 — submit the form
+    // Submit the form
+    const submitButton = page
+      .getByRole("button", { name: /schedule event|confirm|submit/i })
+      .first();
+    await submitButton.click({ timeout: 10000 });
 
-    return {
-      message: `Filled name and email on the booking form for ${date} at ${time}. See debug-booking-form.png to verify the fields look correct before submitting.`,
-    };
+    // If Calendly shows a reCAPTCHA challenge, wait for the checkbox and click it
+    const recaptchaFrame = page.frameLocator('iframe[title="reCAPTCHA"]');
+    const checkbox = recaptchaFrame.locator("#recaptcha-anchor");
+    try {
+      await checkbox.waitFor({ state: "visible", timeout: 8000 });
+      await checkbox.click();
+      // Wait for the checkmark animation to complete, then click the modal's Continue button
+      await recaptchaFrame.locator(".recaptcha-checkbox-checked").waitFor({ state: "visible", timeout: 10000 });
+      await page.getByRole("button", { name: /continue/i }).click({ timeout: 5000 });
+    } catch {
+      // No CAPTCHA appeared — proceed normally
+    }
+
+    await page.waitForSelector('h1:has-text("You are scheduled")', { timeout: 30000 });
+
+    return { message: `Appointment booked for ${date} at ${time}.` };
   } finally {
     await browser.close();
   }
