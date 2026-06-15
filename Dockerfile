@@ -28,9 +28,15 @@ RUN bun install --frozen-lockfile --production --ignore-scripts
 RUN bun audit --level high
 RUN bunx playwright install --with-deps chromium && \
     apt-get install -y --no-install-recommends curl && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    mv /root/.cache/ms-playwright /ms-playwright && \
+    chown -R bun:bun /ms-playwright /app
 
-COPY --from=build /app/src ./src/
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+
+COPY --chown=bun:bun --from=build /app/src ./src/
+
+USER bun
 
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
